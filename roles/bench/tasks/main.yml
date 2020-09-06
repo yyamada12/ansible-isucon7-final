@@ -1,0 +1,20 @@
+- name: Go get dep
+  shell: /bin/bash -lc "go get -u github.com/golang/dep/cmd/dep"
+  become: yes
+  become_user: isucon
+- name: Apt install make
+  apt:
+    name: make
+    state: present
+- name: Make ensure
+  shell: /bin/bash -lc "make ensure"
+  args:
+    chdir: /home/isucon/cco/bench
+  become: yes
+  become_user: isucon
+- name: Make
+  shell: /bin/bash -lc "make"
+  args:
+    chdir: /home/isucon/cco/bench
+  become: yes
+  become_user: isucon
