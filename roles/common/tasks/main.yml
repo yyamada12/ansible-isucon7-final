@@ -1,0 +1,27 @@
+- name: Apt install git
+  apt:
+    name: git
+    state: present
+- name: user isucon
+  user:
+    name: isucon
+- name: copy sudoers file
+  copy:
+    src: 90-isucon-user
+    dest: /etc/sudoers.d/90-isucon-user
+    owner: root
+    group: root
+    mode: 0640
+
+- name: git clone isucon7-final
+  git:
+    repo: "https://github.com/isucon/isucon7-final.git"
+    dest: /home/isucon/cco
+    update: no
+  become_user: isucon
+
+- name: git clone xbuild
+  git:
+    repo: "https://github.com/tagomoris/xbuild.git"
+    dest: /home/isucon/xbuild
+  become_user: isucon

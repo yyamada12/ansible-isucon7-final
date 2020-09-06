@@ -1,0 +1,37 @@
+- name: Go get dep
+  shell: /bin/bash -lc "go get -u github.com/golang/dep/cmd/dep"
+  become: yes
+  become_user: isucon
+- name: Apt install make
+  apt:
+    name: make
+    state: present
+- name: Make ensure
+  shell: /bin/bash -lc "make ensure"
+  args:
+    chdir: /home/isucon/cco/webapp/go
+  become: yes
+  become_user: isucon
+- name: Make
+  shell: /bin/bash -lc "make"
+  args:
+    chdir: /home/isucon/cco/webapp/go
+  become: yes
+  become_user: isucon
+- name: Copy env.sh
+  copy:
+    src: env.sh
+    dest: /home/isucon/env.sh
+    owner: isucon
+    group: isucon
+    mode: 0755
+- name: Fix cco.golang.service
+  replace:
+    dest: /home/isucon/cco/files/cco.golang.service
+    regexp: "/home/isucon/webapp"
+    replace: "/home/isucon/cco/webapp"
+- name: Set service file
+  command: cp /home/isucon/cco/files/cco.golang.service /etc/systemd/system/cco.golang.service
+  become: yes
+  notify:
+    - daemon-reload

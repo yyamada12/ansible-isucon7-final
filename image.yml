@@ -1,0 +1,23 @@
+---
+- hosts: local
+  become: yes
+  roles:
+    - common
+    - go
+    - mysql
+    - nginx
+    - webapp.go
+
+  tasks:
+    - name: Start default daemons
+      become: yes
+      become_user: root
+      systemd:
+        name: "{{ item }}"
+        state: restarted
+        daemon_reload: yes
+        enabled: yes
+      loop:
+        - nginx
+        - mysql
+        - cco.golang

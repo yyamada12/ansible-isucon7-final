@@ -1,0 +1,22 @@
+- name: Apt install nginx
+  apt:
+    name: nginx
+    state: present
+- name: fix nginx.conf
+  replace:
+    dest: /home/isucon/cco/files/cco.nginx.conf
+    regexp: "/home/isucon/webapp/public"
+    replace: "/home/isucon/cco/webapp/public"
+  become_user: isucon
+- name: Set service file
+  command: cp /home/isucon/cco/files/cco.nginx.conf /etc/nginx/sites-available/cco.nginx.conf
+  become: yes
+- name: Remove symlink
+  file:
+    path: "/etc/nginx/sites-enabled/default"
+    state: absent
+- name: Create symlink
+  file:
+    src: "/etc/nginx/sites-available/cco.nginx.conf"
+    dest: "/etc/nginx/sites-enabled/cco.nginx.conf"
+    state: link

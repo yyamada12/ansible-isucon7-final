@@ -1,0 +1,11 @@
+- name: Apt install mysql
+  apt:
+    name:
+      - mysql-server-5.7
+    state: present
+- name: Init db
+  shell: /home/isucon/cco/db/init.sh
+  become: yes
+- name: Create MySQL user
+  shell: mysql -e  "GRANT ALL ON isudb.* TO isucon@localhost IDENTIFIED BY 'password'"
+  become: yes
